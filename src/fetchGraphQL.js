@@ -1,8 +1,8 @@
 import http from './http-common';
 
-export default async (text, variables) => {
+export default async (query, variables) => {
 	const res = await http.post('', JSON.stringify({
-		query: text,
+		query,
 		variables,
 	}));
 

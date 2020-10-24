@@ -10,14 +10,16 @@ export default () => {
 		(async () => {
 			try {
 				const response = await fetchGraphQL(`
-      query RepositoryNameQuery {
-        # feel free to change owner/name here
-        repository(owner: "facebook" name: "relay") {
-          name
-        }
-      }
-		`);
+					query RepositoryNameQuery {
+						# feel free to change owner/name here
+						repository(owner: "facebook" name: "relay") {
+							name
+						}
+					}
+				`);
+
 				if (!isMounted) return;
+
 				setState({ name: response.data.repository.name });
 			} catch (e) {
 				console.log(e);
