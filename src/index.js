@@ -1,18 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import './App.css';
 
+import App from './App';
+import { GithubProvider } from './context/GithubContext';
 import RelayEnvironment from './RelayEnvironment';
+import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-	<RelayEnvironmentProvider environment={RelayEnvironment}>
-		<App />
-	</RelayEnvironmentProvider>,
+	<BrowserRouter>
+		<GithubProvider>
+			<RelayEnvironmentProvider environment={RelayEnvironment}>
+				<App />
+			</RelayEnvironmentProvider>
+		</GithubProvider>
+	</BrowserRouter>,
 	document.getElementById('root')
 );
 
