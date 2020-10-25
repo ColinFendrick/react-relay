@@ -1,38 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
+import { useQueryLoader, usePreloadedQuery } from 'react-relay/hooks';
 
-import fetchGraphQL from './fetchGraphQL';
+import { AppRepositoryNameQuery } from './gql';
+
+const App = ({ queryReference }) => {
+	const data = queryReference && usePreloadedQuery(AppRepositoryNameQuery, queryReference);
+	return <div className='App'>
+		{data?.repository.name}
+	</div>;
+};
 
 export default () => {
-	const [state, setState] = useState({ name: '' });
+	const [queryReference, loadQuery] = useQueryLoader(AppRepositoryNameQuery);
 
 	useEffect(() => {
-		let isMounted = true;
-		(async () => {
-			try {
-				const response = await fetchGraphQL(`
-					query RepositoryNameQuery {
-						# feel free to change owner/name here
-						repository(owner: "facebook" name: "relay") {
-							name
-						}
-					}
-				`);
-
-				if (!isMounted) return;
-
-				setState({ name: response.data.repository.name });
-			} catch (e) {
-				console.log(e);
-			}
-		})();
-		return () => {
-			isMounted = false;
-		};
-	}, [fetchGraphQL]);
+		loadQuery({});
+	}, []);
 
 	return (
-		<div className='App'>
-			{state.name ? `Repository: ${state.name}` : 'Loading'}
-		</div>
+		<Suspense fallback={'Loading...'}>
+			<App queryReference={queryReference} />
+		</Suspense>
 	);
 };
